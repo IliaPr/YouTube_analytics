@@ -16,8 +16,8 @@ class Channel:
         print(json.dumps(self.channel, indent=2, ensure_ascii=False))
 
 
-vdud = Channel("UC1eFXmJNkjITxPFWTy6RsWg")
-vdud.print_info()
+dust = Channel("UC7sDT8jZ76VLV1u__krUutA")
+dust.print_info()
 
 
 
