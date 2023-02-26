@@ -6,7 +6,6 @@ class Channel:
     def __init__(self, channel_id):
         '''Инициализация'''
         self.__id_channel = channel_id
-        self.api_key: str = os.getenv('YOUTUBE_API')
         self.channel_info = self.yt_obj().channels().list(id=channel_id, part='snippet, statistics').execute()
         self.link = f"https://www.youtube.com/channel/{self.__id_channel}"
         self.title = self.channel_info['items'][0]['snippet']['title']
@@ -14,11 +13,12 @@ class Channel:
         self.subscribers = self.channel_info['items'][0]['statistics']['subscriberCount']
         self.amt_video = self.channel_info['items'][0]['statistics']['videoCount']
         self.amt_views = self.channel_info['items'][0]['statistics']['viewCount']
-
-    def yt_obj(self):
+    @classmethod
+    def yt_obj(cls):
         '''создается специальный объект для работы с API'''
-        self.yt_obj = build('youtube', 'v3', developerKey=self.api_key)
-        return self.yt_obj
+        api_key: str = os.getenv('YOUTUBE_API')
+        youtube = build('youtube', 'v3', developerKey=api_key)
+        return youtube
 
     def print_info(self):
         '''создание статистики канала'''
@@ -28,7 +28,7 @@ class Channel:
     def save_to_file(self, name_file):
         '''запись статистики в файл'''
         with open(name_file, 'w', encoding='UTF-8') as file:
-            json.dump(self.channel_info, file, indent=4)
+            json.dump(self.channel_info, file, indent=4, ensure_ascii=False)
 
 #Dust = Channel('UC7sDT8jZ76VLV1u__krUutA')
-#print(Channel.yt_obj(Dust))
+#print(Channel.yt_obj())
