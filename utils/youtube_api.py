@@ -30,5 +30,27 @@ class Channel:
         with open(name_file, 'w', encoding='UTF-8') as file:
             json.dump(self.channel_info, file, indent=4, ensure_ascii=False)
 
-#Dust = Channel('UC7sDT8jZ76VLV1u__krUutA')
-#print(Channel.yt_obj())
+    def __str__(self):
+        '''Метод возврата названия канала'''
+        return f'Channel: {self.title}'
+
+    def __gt__(self, other):
+        '''Метод сравнения количества подписчиков: если у первого канала - True'''
+        return int(self.subscribers) > int(other.subscribers)
+
+    def __lt__(self, other):
+        '''Метод сравнения количества подписчиков: если у второго канала - True'''
+        return int(self.subscribers) < int(other.subscribers)
+
+    def __add__(self, other):
+        '''Метод сложения клочества подписчиков'''
+        return int(self.subscribers) + int(other.subscribers)
+
+if __name__ == '__main__':
+    Dust = Channel('UC7sDT8jZ76VLV1u__krUutA')
+    vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+    print(vdud)
+    print(Dust)
+    print(vdud < Dust)
+    print(vdud > Dust)
+    print(vdud + Dust)
