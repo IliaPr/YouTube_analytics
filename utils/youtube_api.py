@@ -43,14 +43,62 @@ class Channel:
         return int(self.subscribers) < int(other.subscribers)
 
     def __add__(self, other):
-        '''Метод сложения клочества подписчиков'''
+        '''Метод сложения количества подписчиков'''
         return int(self.subscribers) + int(other.subscribers)
 
+class Video:
+    '''Класс статистики видео'''
+    def __init__(self, id_video):
+        '''Инициализация'''
+        self.id_video = id_video
+        self.video_data = self.yt_obj().videos().list(id=self.id_video, part='snippet, statistics').execute()
+        self.video_info = json.dumps(self.video_data, indent=4)
+        self.video_name = self.video_data['items'][0]['snippet']['title']
+        self.video_view_count = self.video_data['items'][0]['statistics']['viewCount']
+        self.video_like_count = self.video_data['items'][0]['statistics']['likeCount']
+
+    @classmethod
+    def yt_obj(cls):
+        '''создается специальный объект для работы с API'''
+        api_key: str = os.getenv('YOUTUBE_API')
+        youtube = build('youtube', 'v3', developerKey=api_key)
+        return youtube
+
+    def __str__(self):
+        '''Возврат информации о плейлисте'''
+        return f"Название видео: {self.video_name}"
+
+
+class PLVideo(Video):
+    '''Rласс для статистики плейлиста'''
+    def __init__(self,id_video, id_playlist):
+        '''Инициализация'''
+        super().__init__(id_video) #Наследование от класса Video
+        self.id_playlist = id_playlist
+        self.playlist_data = self.yt_obj().playlists().list(id=self.id_playlist, part='snippet, contentDetails').execute()
+        self.playlist_info = json.dumps(self.playlist_data, indent=4)
+        self.playlist_name = self.playlist_data['items'][0]['snippet']['title']
+
+    @classmethod
+    def yt_obj(cls):
+        '''создается специальный объект для работы с API'''
+        api_key: str = os.getenv('YOUTUBE_API')
+        youtube = build('youtube', 'v3', developerKey=api_key)
+        return youtube
+
+    def __str__(self):
+        '''Возврат информации о плейлисте'''
+        return f"Название видео: {self.video_name} / Название плейлиста: {self.playlist_name}"
+
+
+
 if __name__ == '__main__':
-    Dust = Channel('UC7sDT8jZ76VLV1u__krUutA')
-    vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
-    print(vdud)
-    print(Dust)
-    print(vdud < Dust)
-    print(vdud > Dust)
-    print(vdud + Dust)
+    #Dust = Channel('UC7sDT8jZ76VLV1u__krUutA')
+    #print(Dust)
+    #print(vdud < Dust)
+    #print(vdud > Dust)
+    #print(vdud + Dust)
+    video1 = Video('9lO06Zxhu88')
+    video2 = PLVideo('BBotskuyw_M', 'PL7Ntiz7eTKwrqmApjln9u4ItzhDLRtPuD')
+    print(video1)
+    print(video2)
