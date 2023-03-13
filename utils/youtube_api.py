@@ -44,13 +44,22 @@ class Video(Mixin_youtube):
     '''Класс статистики видео'''
     def __init__(self, id_video):
         '''Инициализация'''
-        self.id_video = id_video
-        youtube = self.get_service()
-        self.video_data = youtube.videos().list(id=self.id_video, part='snippet, statistics').execute()
-        self.video_info = json.dumps(self.video_data, indent=4)
-        self.video_name = self.video_data['items'][0]['snippet']['title']
-        self.video_view_count = self.video_data['items'][0]['statistics']['viewCount']
-        self.video_like_count = self.video_data['items'][0]['statistics']['likeCount']
+        try:
+            self.id_video = id_video
+            youtube = self.get_service()
+            self.video_data = youtube.videos().list(id=self.id_video, part='snippet, statistics').execute()
+            self.video_info = json.dumps(self.video_data, indent=4)
+            self.video_name = self.video_data['items'][0]['snippet']['title']
+            self.video_view_count = self.video_data['items'][0]['statistics']['viewCount']
+            self.video_like_count = self.video_data['items'][0]['statistics']['likeCount']
+        except:
+            #отработка исключения
+            self.video_name = None
+            self.video_info = None
+            self.video_data = None
+            self.video_view_count = None
+            self.video_like_count = None
+        
 
     def __str__(self):
         '''Возврат информации о плейлисте'''
@@ -80,7 +89,10 @@ if __name__ == '__main__':
     #print(vdud < Dust)
     #print(vdud > Dust)
     #print(vdud + Dust)
-    video1 = Video('9lO06Zxhu88')
-    video2 = PLVideo('BBotskuyw_M', 'PL7Ntiz7eTKwrqmApjln9u4ItzhDLRtPuD')
-    print(video1)
-    print(video2)
+    #video1 = Video('9lO06Zxhu88')
+    #video2 = PLVideo('BBotskuyw_M', 'PL7Ntiz7eTKwrqmApjln9u4ItzhDLRtPuD')
+    #print(video1)
+    #print(video2)
+    broken_video = Video('broken_video_id')
+    print(broken_video.video_name)
+    print(broken_video.video_like_count)
